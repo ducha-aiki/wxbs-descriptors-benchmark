@@ -26,3 +26,17 @@ The provided file should take two arguments: path to input image input_img.bmp a
 
 Output file: one space separated line for one descriptor.
 Please, see example in [code/descriptors/Pixels11.py](https://github.com/ducha-aiki/wxbs-descriptors-benchmark/blob/master/code/descriptors/Pixels11.py) or [code/descriptors/SIFT.py](https://github.com/ducha-aiki/wxbs-descriptors-benchmark/blob/master/code/descriptors/SIFT.py)
+
+
+## Citation
+
+Please cite us if you use this code:
+
+    @InProceedings{Mishkin2015WXBS,
+     author = {{Mishkin}, D. and {Matas}, J. and {Perdoch}, M. and {Lenc}, K. },
+     Booktitle = {Proceedings of the British Machine Vision Conference},
+     Publisher                = {BMVA},
+     title = "{WxBS: Wide Baseline Stereo Generalizations}",
+     year = 2015,
+     month = sep,}
+
