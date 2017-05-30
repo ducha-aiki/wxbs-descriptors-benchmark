@@ -349,7 +349,7 @@ def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", m
                     desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")] = color
                     hue += 1.0/float(colors_num)
                     print "adding", desc_name
-                r,p,ap,ap2 = vv;
+                r,p,ap = vv;
                 print desc_name, dataset_name, p[0]
                 if ('Inv' in desc_name) or ('Mirr' in desc_name):
                     if really_draw:
@@ -358,7 +358,6 @@ def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", m
                     if really_draw:
                         pl = plt.plot(1. - p, r, color = desc_to_color[desc_name])
                 leg.append(desc_name + " , mAUC = " + "%.4f" % ap)
-                leg.append(desc_name + " , mAUC2 = " + "%.4f" % ap2)
                 if (tensor_logger != None):
                     tensor_logger.log_value(desc_name+' '+dataset_name, ap).step()
                 if (logger != None):
