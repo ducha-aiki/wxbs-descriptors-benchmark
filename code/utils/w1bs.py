@@ -312,4 +312,63 @@ def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SN
             plt.legend(leg,prop={'size':8},loc = 'best')
             plt.savefig(out_path)
             plt.clf()
-    return    
+    return   
+def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SNN_ratio"],
+                        colors = [], lines = [], descs_to_draw = [],really_draw = False,
+                        logger=None,
+                        tensor_logger = None):
+    full_results_dict = get_rec_prec_ap_for_all_match_files(DESC_DIR, whitelist = descs_to_draw)
+    desc_to_color = {}
+    if not os.path.isdir(OUT_DIR):
+        os.makedirs(OUT_DIR)
+    hue = 0
+    for m in methods:
+        avg_res = get_average_plot_data_for_datasets(full_results_dict, method = m)
+        for dataset_name, v in avg_res.iteritems():
+            out_fname = dataset_name + "_" + m + '.eps'
+            out_path = os.path.join(OUT_DIR,out_fname)
+            if really_draw:
+                plt.figure(dpi=300,  figsize=(8, 6))
+            idx = 0
+            leg = []
+            if len(descs_to_draw) > 0:
+                colors_num = len(descs_to_draw);
+            else:
+                colors_num = len(v);
+            r = 0
+            p = 0
+            ap = 0
+            for desc_name, vv in v.iteritems():
+                if len(descs_to_draw)>0:
+                    if desc_name not in descs_to_draw:
+                        continue
+                try:
+                    ttttt = desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")]
+                except:
+                    color = list ( colorsys.hsv_to_rgb(hue,1.0,1.0)   )
+                    desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")] = color
+                    hue += 1.0/float(colors_num)
+                    print "adding", desc_name
+                r,p,ap,ap2 = vv;
+                print desc_name, dataset_name, p[0]
+                if ('Inv' in desc_name) or ('Mirr' in desc_name):
+                    if really_draw:
+                        pl = plt.plot(1. - p, r, color = desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")], linestyle = "--")
+                else:
+                    if really_draw:
+                        pl = plt.plot(1. - p, r, color = desc_to_color[desc_name])
+                leg.append(desc_name + " , mAUC = " + "%.4f" % ap)
+                leg.append(desc_name + " , mAUC2 = " + "%.4f" % ap2)
+                if (tensor_logger != None):
+                    tensor_logger.log_value(desc_name+' '+dataset_name, ap).step()
+                if (logger != None):
+                        logger.log_stats('/logs', ' Matching stats: ', str(desc_name +' '+dataset_name+" , mAUC = " + "%.4f" % ap))
+
+            print(leg)
+            if really_draw:
+                plt.xlabel("1 - precision")
+                plt.ylabel("Recall")
+                plt.legend(leg,prop={'size':8},loc = 'best')
+                plt.savefig(out_path)
+                plt.clf()
+    return 
