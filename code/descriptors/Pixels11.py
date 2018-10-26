@@ -10,7 +10,7 @@ try:
     input_img_fname = sys.argv[1]
     output_fname = sys.argv[2]
 except:
-    print "Wrong input format. Try Pixels11.py img.jpg out.txt"
+    print ("Wrong input format. Try Pixels11.py img.jpg out.txt")
     sys.exit(1)
 image = cv2.imread(input_img_fname,0)
 h,w = image.shape

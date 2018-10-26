@@ -33,12 +33,12 @@ def describe_patch_images_with_descriptor(desc_fname, img_files_list, OVERWRITE_
                 os.makedirs(out_dir)
         if process:
             command_list = ["./"+desc_fname, img_fname, out_fname]
-            print command_list
+            print (command_list)
             out = call(command_list)
-            print out
+            print (out)
     return
 def checkIfDescriptorScriptIsOK(desc_fname):
-    print "Checking", desc_fname
+    print ("Checking", desc_fname)
     desc_name = getDescExtension(desc_fname)
     status = True
     try:
@@ -46,17 +46,17 @@ def checkIfDescriptorScriptIsOK(desc_fname):
         with open("graf_test." + desc_name, "rb") as f:
             lines = f.readlines()
         if len(lines) != 2:
-            print "Number of descriptors", len(lines), "!= number of patches 2"
+            print ("Number of descriptors", len(lines), "!= number of patches 2")
             status =  False
         descs = []
         for l in lines:
             d1 = np.fromstring(l, dtype=float, sep=' ')
             descs.append(d1)
         if len(descs[0]) != len(descs[1]):
-            print "Descriptors have different lengths", descs[0].shape, descs[1].shape
+            print ("Descriptors have different lengths", descs[0].shape, descs[1].shape)
             status = False
-    except Exception, e:
-        print str(e)
+    except:#Exception, e:
+        #print (str(e))
         status =  False
     if status:
         os.remove("graf_test." + desc_name)
@@ -67,7 +67,7 @@ def match_descriptors(d1, d2, metric = "L2", batch_size = 256):
     d1_num, d1_dim = d1.shape
     d2_num, d2_dim = d2.shape
     if d1_dim != d2_dim:
-        print "d1 and d2 have different dimentions", d1_dim, d2_dim
+        print ("d1 and d2 have different dimentions", d1_dim, d2_dim)
         return None
     out = np.zeros((d1_num,7)) # idx_in_d1 indx_in_d2 dist dist_ratio 2nd_idx_in_d2 dist2  dist_diff
     if metric == "L2":
@@ -85,7 +85,7 @@ def match_descriptors(d1, d2, metric = "L2", batch_size = 256):
         elif metric == "Hamming":
             dists = pairwise_distances(query,d2,metric = "hamming")
         else:
-            print "Non implemented yet"
+            print ("Non implemented yet")
             return None
         out[curr_idxs,0] = curr_idxs;
         out[curr_idxs,1] = np.argmin(dists, axis = 1)
@@ -109,7 +109,7 @@ def match_descriptors(d1, d2, metric = "L2", batch_size = 256):
         elif metric == "Hamming":
             dists = pairwise_distances(query,d2,metric = "hamming")
         else:
-            print "Non implemented yet"
+            print ("Non implemented yet")
             return None
         out[last_batch_idxs,0] = last_batch_idxs;
         out[last_batch_idxs,1] = np.argmin(dists, axis = 1) 
@@ -142,7 +142,7 @@ def get_list_of_pairing_files_with_descriptors(DESC_DIR = "../data/out_descripto
                 if os.path.isfile(fname2):
                     desc_pair_files.append((fname1,fname2))
                 else:
-                    print "Warning! No pair for", fname1
+                    print ("Warning! No pair for", fname1)
     return desc_pair_files
 def match_descriptors_and_save_results(DESC_DIR = "../data/out_descriptors", do_rewrite = False, dist_dict = {}, force_rewrite_list = []):
     desc_pair_files = get_list_of_pairing_files_with_descriptors(DESC_DIR = DESC_DIR)
@@ -151,7 +151,7 @@ def match_descriptors_and_save_results(DESC_DIR = "../data/out_descriptors", do_
         our_dir = os.path.dirname(match_fname)
         if not os.path.isdir(our_dir):
             os.makedirs(our_dir)
-        print match_fname
+        print (match_fname)
         desc_name = pair[0].split(".")[-1];
         needs_matching = (desc_name in force_rewrite_list) or (not os.path.isfile(match_fname)) or do_rewrite
         if needs_matching:
@@ -171,7 +171,7 @@ def match_descriptors_and_save_results(DESC_DIR = "../data/out_descriptors", do_
                 metric = "L2"
             match_dict, match_matrix = match_descriptors(d1, d2, metric = metric)
             el = time.time() - t
-            print  el, "sec"
+            print ( el, "sec")
             np.savetxt(match_fname, match_matrix, delimiter=' ', fmt='%10.5f')
     return
 def get_recall_and_pecision(dist, is_correct, n_pts = 100, smaller_is_better = True):
@@ -245,7 +245,7 @@ def get_average_plot_data_for_datasets(full_results_dict, method = "SNN_ratio"):
         total_p = 0
         total_ap = 0
         total_count = 0
-        #print desc_name
+        #print (desc_name)
         for dataset_name, vv in v.iteritems():
             #print dataset_name
             if dataset_name not in avg_res:
@@ -302,9 +302,9 @@ def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SN
                     color = list ( colorsys.hsv_to_rgb(hue,1.0,1.0)   )
                     desc_to_color[desc_name] = color
                     hue += 1.0/float(colors_num)
-                    print "adding", desc_name
+                    print( "adding", desc_name)
                 r,p,ap = vv;
-                print desc_name, dataset_name, p[0]
+                print (desc_name, dataset_name, p[0])
                 pl = plt.plot(1. - p, r, color = desc_to_color[desc_name])
                 leg.append(desc_name + " , mAUC = " + "%.3f" % ap)
             plt.xlabel("1 - precision")
@@ -348,9 +348,9 @@ def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", m
                     color = list ( colorsys.hsv_to_rgb(hue,1.0,1.0)   )
                     desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")] = color
                     hue += 1.0/float(colors_num)
-                    print "adding", desc_name
+                    print ("adding", desc_name)
                 r,p,ap = vv;
-                print desc_name, dataset_name, p[0]
+                print (desc_name, dataset_name, p[0])
                 if ('Inv' in desc_name) or ('Mirr' in desc_name):
                     if really_draw:
                         pl = plt.plot(1. - p, r, color = desc_to_color[desc_name.replace("Inv", "").replace("Mirr","")], linestyle = "--")

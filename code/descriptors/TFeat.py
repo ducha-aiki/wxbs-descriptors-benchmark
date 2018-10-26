@@ -22,7 +22,7 @@ try:
     MEAN = stats['mi']
     STD = stats['sigma']
 except:
-    print "Please, ensure that there is descriptors/aux/stats.liberty.t7 file"
+    print ("Please, ensure that there is descriptors/aux/stats.liberty.t7 file")
     sys.exit(1)
 
 def preprocess_patch(patch):
@@ -63,8 +63,8 @@ if __name__ == '__main__':
     require('cunn')
     require('cudnn')
     net = torch.load(MODEL_FNAME)
-    print 'Initialization and preprocessing time', time.time() - t
+    print ('Initialization and preprocessing time', time.time() - t)
     t = time.time()
     out_descs = extract_tfeats(net,patches)
-    print 'extraction time', time.time() - t 
+    print ('extraction time', time.time() - t )
     np.savetxt(output_fname, out_descs, delimiter=' ', fmt='%10.7f')    
