@@ -273,12 +273,14 @@ def get_average_plot_data_for_datasets(full_results_dict, method = "SNN_ratio"):
     return avg_res
 def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SNN_ratio"], colors = [], lines = [], descs_to_draw = []):
     full_results_dict = get_rec_prec_ap_for_all_match_files(DESC_DIR, whitelist = descs_to_draw)
+    #print ('tttt',full_results_dict)
     desc_to_color = {}
     if not os.path.isdir(OUT_DIR):
         os.makedirs(OUT_DIR)
     hue = 0
     for m in methods:
         avg_res = get_average_plot_data_for_datasets(full_results_dict, method = m)
+        #print (avg_res)
         for dataset_name, v in avg_res.items():
             out_fname = dataset_name + "_" + m + '.eps'
             out_path = os.path.join(OUT_DIR,out_fname)
@@ -304,12 +306,13 @@ def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SN
                     hue += 1.0/float(colors_num)
                     print( "adding", desc_name)
                 r,p,ap = vv;
-                print (desc_name, dataset_name, p[0])
+                print (desc_name, dataset_name, "%.5f" % ap)
                 pl = plt.plot(1. - p, r, color = desc_to_color[desc_name])
                 leg.append(desc_name + " , mAUC = " + "%.3f" % ap)
             plt.xlabel("1 - precision")
             plt.ylabel("Recall")
             plt.legend(leg,prop={'size':8},loc = 'best')
+            #print (leg)
             plt.savefig(out_path)
             plt.clf()
     return   
