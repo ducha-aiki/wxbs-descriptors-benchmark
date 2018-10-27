@@ -220,12 +220,12 @@ def get_rec_prec_of_all_match_files(DESC_DIR = "../data/out_descriptors"):
 def get_rec_prec_ap_for_all_match_files(DESC_DIR, whitelist = []):
     files_dict = get_rec_prec_of_all_match_files(DESC_DIR = DESC_DIR)
     results_dict = {}
-    for desc_name, v in files_dict.iteritems():
+    for desc_name, v in files_dict.items():
         if (len(whitelist) > 0) and desc_name in whitelist:
             results_dict[desc_name] = {}
-            for dataset_name, vv in v.iteritems():
+            for dataset_name, vv in v.items():
                 results_dict[desc_name][dataset_name] = {}
-                for pair_name, fname in vv.iteritems():
+                for pair_name, fname in vv.items():
                     results_dict[desc_name][dataset_name][pair_name]= {}
                     m = np.loadtxt(fname)
                     is_correct = (m[:,0] == m[:,1]).astype(np.float32)
@@ -239,14 +239,14 @@ def get_rec_prec_ap_for_all_match_files(DESC_DIR, whitelist = []):
 def get_average_plot_data_for_datasets(full_results_dict, method = "SNN_ratio"):
     avg_res = {}
     avg_res["Total"]  = {}
-    for desc_name, v in full_results_dict.iteritems():
+    for desc_name, v in full_results_dict.items():
         total_start = True
         total_r = 0
         total_p = 0
         total_ap = 0
         total_count = 0
         #print (desc_name)
-        for dataset_name, vv in v.iteritems():
+        for dataset_name, vv in v.items():
             #print dataset_name
             if dataset_name not in avg_res:
                 avg_res[dataset_name] = {}
@@ -254,7 +254,7 @@ def get_average_plot_data_for_datasets(full_results_dict, method = "SNN_ratio"):
             r = 0
             p = 0
             ap = 0
-            for pair_name, vvv in vv.iteritems():
+            for pair_name, vvv in vv.items():
                 r += vvv[method][0]
                 p += vvv[method][1]
                 ap += vvv[method][2]
@@ -279,7 +279,7 @@ def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SN
     hue = 0
     for m in methods:
         avg_res = get_average_plot_data_for_datasets(full_results_dict, method = m)
-        for dataset_name, v in avg_res.iteritems():
+        for dataset_name, v in avg_res.items():
             out_fname = dataset_name + "_" + m + '.eps'
             out_path = os.path.join(OUT_DIR,out_fname)
             plt.figure(dpi=300,  figsize=(8, 6))
@@ -292,7 +292,7 @@ def draw_and_save_plots(DESC_DIR, OUT_DIR = "../data/out_graphs", methods = ["SN
             r = 0
             p = 0
             ap = 0
-            for desc_name, vv in v.iteritems():
+            for desc_name, vv in v.items():
                 if len(descs_to_draw)>0:
                     if desc_name not in descs_to_draw:
                         continue
@@ -324,7 +324,7 @@ def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", m
     hue = 0
     for m in methods:
         avg_res = get_average_plot_data_for_datasets(full_results_dict, method = m)
-        for dataset_name, v in avg_res.iteritems():
+        for dataset_name, v in avg_res.items():
             out_fname = dataset_name + "_" + m + '.eps'
             out_path = os.path.join(OUT_DIR,out_fname)
             if really_draw:
@@ -338,7 +338,7 @@ def draw_and_save_plots_with_loggers(DESC_DIR, OUT_DIR = "../data/out_graphs", m
             r = 0
             p = 0
             ap = 0
-            for desc_name, vv in v.iteritems():
+            for desc_name, vv in v.items():
                 if len(descs_to_draw)>0:
                     if desc_name not in descs_to_draw:
                         continue
